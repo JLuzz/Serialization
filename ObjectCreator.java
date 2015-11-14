@@ -19,7 +19,7 @@ public class ObjectCreator
     private int a;
     private int b;
 
-    public SimpleObject(Int a, Int b){
+    public SimpleObject(int a, int b){
         this.a = a;
         this.b = b;
     }
@@ -66,7 +66,7 @@ public class ObjectCreator
     switch(selection)
     {
       case 0:
-        sender.connected = false;
+      //  sender.connected = false;
         break;
       case 1:
         object = createSimpleObject();
@@ -78,9 +78,10 @@ public class ObjectCreator
         object = createObjectPrimitivesArray();
         break;
       case 4:
-        object = createObjectReferencesArray();
+        //object = createObjectReferencesArray();
+        break;
       case 5:
-        object = createObjectsCollectionObject();
+        //object = createObjectsCollectionObject();
         break;
     }
     return object;
@@ -95,7 +96,7 @@ public class ObjectCreator
     int b = Integer.parseInt(user_input.next());
     System.out.println("---Finished Simple Object---");
 
-    return SimpleObject(a, b);
+    return new SimpleObject(a, b);
   }
 
   private ObjectReferenceObjects createObjectReferenceObjects(){
@@ -104,7 +105,7 @@ public class ObjectCreator
     Object objB = createSimpleObject();
     System.out.println("---Finished Object Reference Objects---");
 
-    return ObjectReferenceObjects(objA, objB);
+    return new ObjectReferenceObjects(objA, objB);
   }
 
   private ObjectPrimitivesArray createObjectPrimitivesArray(){
@@ -112,7 +113,7 @@ public class ObjectCreator
     ObjectPrimitivesArray objPrimsArray = new ObjectPrimitivesArray();
     System.out.println("Please enter int values:");
     System.out.println("Primitive array:");
-    for(i = 0; i < objPrimsArray.intArray.length; i++){
+    for(int i = 0; i < objPrimsArray.intArray.length; i++){
       System.out.print("[" + (5 - i) + "] : ");
       objPrimsArray.intArray[i] = Integer.parseInt(user_input.next());
       System.out.print("\n");
@@ -121,13 +122,13 @@ public class ObjectCreator
 
     return objPrimsArray;
   }
-
+/*
   private ObjectReferencesArray createObjectReferencesArray(){
 
   }
 
   private ObjectsCollectionObject createObjectsCollectionObject()
   {
-    Vector<>
-  }
+    //Vector<>
+  }*/
 }
