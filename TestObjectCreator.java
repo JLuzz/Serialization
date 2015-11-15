@@ -1,18 +1,21 @@
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import java.io.inputStream;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.AfterClass;
+import static org.junit.Assert.*;
 
 public class TestObjectCreator{
 
-	private objCreate;
+	private static ObjectCreator objCreate;
 
 	@BeforeClass
-	public staic void oneTimeSetup(){
+	public static void oneTimeSetup(){
 		objCreate = new ObjectCreator();
 	}
 
 	@Before
-	public static void setUp(){
+	public void setUp(){
 
 	}
 
@@ -22,18 +25,14 @@ public class TestObjectCreator{
 	}
 
 	@After
-	public static void tearDown(){
-		System.setIn(System.in);
+	public void tearDown(){
+
 	}
 
 	@Test
-	public testCreateSimpleObject(){
-		sObject = objCreate.createSimpleObject();
-		ByteArrayInputStream in = new ByteArrayInputStream("2".getBytes());
-		System.setIn(in);
-		//in.reset();
-		in.read("3".getBytes());
-
+	public void testCreateSimpleObject(){
+		ObjectCreator.SimpleObject sObject = objCreate.new SimpleObject(2, 3);
+		assertNotNull(sObject);
 	}
 
 }

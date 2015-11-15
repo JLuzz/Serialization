@@ -14,7 +14,7 @@ public class ObjectCreator
     }
 
   //classes to represent the different Objects
-  private class SimpleObject{
+  public class SimpleObject{
 
     private int a;
     private int b;
@@ -25,7 +25,7 @@ public class ObjectCreator
     }
   }
 
-  private class ObjectReferenceObjects{
+  public class ObjectReferenceObjects{
 
     private Object objA;
     private Object objB;
@@ -36,7 +36,7 @@ public class ObjectCreator
     }
   }
 
-  private class ObjectPrimitivesArray{
+  public class ObjectPrimitivesArray{
 
     private int[] intArray;
     private final int LENGTH = 5;

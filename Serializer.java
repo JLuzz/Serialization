@@ -21,7 +21,7 @@ public class Serializer
 
   }
 
-  public Document serialize()
+  public Document serialize(Object object)
   {
     if(!serializedObjects.contains(object))
     {
@@ -53,7 +53,7 @@ public class Serializer
           }
           else
           {
-            for(int j = 0; j<Array.getLength(array); j++)
+            for(int j = 0; j < Array.getLength(array); j++)
             {
               Element ref = new Element("reference");
               id = getID(Array.get(array, j));
@@ -64,7 +64,7 @@ public class Serializer
               }
               for(int j = 0; j < Array.getLength(array); j++)
               {
-                  serialize(Array.get(array,j));
+                  serialize(Array.get(array, j));
               }
             }
           }
@@ -74,16 +74,11 @@ public class Serializer
           Class<?> tempClass = c;
           while(tempClass != null)
           {
-            Field[] fields = tmp.getDeclaringFields();
+            Field[] fields = tempClass.getDeclaredFields();
             ArrayList<Element> fieldXML = serializedFields(fields, object);
             for (Element element : fieldXML)
               objectElement.addContent(element);
               tempClass = tempClass.getSuperClass();
-          }
-
-          for(int j = 0 ; j < Array.getLength(array); j++)
-          {
-
           }
       }
 
@@ -100,9 +95,9 @@ public class Serializer
   {
     ArrayList<Element> elements = new ArrayList<Element>();
 
-    for(int i = 0; i < fields.length; i ++)
+    for(int i = 0; i < fields.length; i++)
     {
-      if(Modifier.isTransient(fields[i].getModifiers() || Modifier.isFinal(fields[i].getModifiers())))
+      if(Modifier.isTransient(fields[i].getModifiers()) || Modifier.isFinal(fields[i].getModifiers()) || Modifier.isStatic(fields[i].getModifiers))
         continue;
 
       try
@@ -140,14 +135,14 @@ public class Serializer
 
   private int getID(Object object)
   {
-      Integer is = refernceID;
+      Integer id = refernceID;
 
       if(referenceMap.containsKey(object))
         id = referenceMap.getObject();
       else
       {
         referenceMap.put(object, id);
-        referenceId++
+        referenceId++;
       }
       return id;
   }
