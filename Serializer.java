@@ -1,9 +1,11 @@
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.util.HashMap;
 
-import jdom2;
+import java.util.HashMap;
+import java.util.ArrayList;
+
+import org.jdom2.*;
 
 public class Serializer
 {
@@ -39,9 +41,9 @@ public class Serializer
       Element objectElement = new Element("object");
       objectElement.setAttribute(new Attribute("class", c.getName()));
       objectElement.setAttribute(new Attribute("id", id.toString()));
-      doc.getRootElement().addContent(objectElement);
+      //doc.getRootElement().addContent(objectElement);
       //objectElement.setAttribute()
-
+/*
       if(c.isArray())
       {
           Object array = object;
@@ -70,7 +72,7 @@ public class Serializer
           }
       }
       else
-      {
+      {*/
           Class<?> tempClass = c;
           while(tempClass != null)
           {
@@ -78,17 +80,18 @@ public class Serializer
             ArrayList<Element> fieldXML = serializedFields(fields, object);
             for (Element element : fieldXML)
               objectElement.addContent(element);
-              tempClass = tempClass.getSuperClass();
+              tempClass = tempClass.getSuperclass();
           }
-      }
+  //    }
 
       if(currentElement == 0)
       {
         serializedObjects.clear();
         referenceId = 0;
       }
-      return doc;
+      doc.getRootElement().addContent(objectElement);
     }
+    return doc;
   }
 
   private ArrayList<Element> serializedFields(Field[] fields, Object object)
@@ -97,7 +100,7 @@ public class Serializer
 
     for(int i = 0; i < fields.length; i++)
     {
-      if(Modifier.isTransient(fields[i].getModifiers()) || Modifier.isFinal(fields[i].getModifiers()) || Modifier.isStatic(fields[i].getModifiers))
+      if(Modifier.isTransient(fields[i].getModifiers()) || Modifier.isFinal(fields[i].getModifiers()) || Modifier.isStatic(fields[i].getModifiers()))
         continue;
 
       try
@@ -115,30 +118,29 @@ public class Serializer
         {
           Element value = new Element("value");
           value.setText(field.get(object).toString());
+          element.addContent(value);
         }
         else
         {
             Integer id = getID(field.get(object));
             Element reference = new Element("reference");
             element.addContent(reference);
-            reference.setText(id);
+            reference.setText(id.toString());
             serialize(field);
         }
         elements.add(element);
       }
-      catch()
-      {
-
-      }
+      catch(Exception e){}
     }
+    return elements;
   }
 
   private int getID(Object object)
   {
-      Integer id = refernceID;
+      Integer id = referenceId;
 
       if(referenceMap.containsKey(object))
-        id = referenceMap.getObject();
+        id = referenceMap.get(object);
       else
       {
         referenceMap.put(object, id);
