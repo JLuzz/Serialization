@@ -73,7 +73,6 @@ public class TestSerializer{
     objectElement.addContent(elementB);
 
     expectedDoc.getRootElement().addContent(objectElement);
-		//System.out.println(new XMLOutputter(Format.getPrettyFormat()).outputString(actualDoc));
 
     assertEquals(expectedDoc.toString(), actualDoc.toString());
 	}

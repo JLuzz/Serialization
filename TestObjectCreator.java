@@ -35,4 +35,12 @@ public class TestObjectCreator{
 		assertNotNull(sObject);
 	}
 
+	@Test
+	public void testCreateObjectReferenceObjects(){
+		SimpleObject sObject1 = new SimpleObject(2,3);
+		SimpleObject sObject2 = new SimpleObject(3,4);
+		ObjectReferenceObjects OROObject = new ObjectReferenceObjects(sObject1, sObject2);
+		assertNotNull(OROObject);
+	}
+
 }
