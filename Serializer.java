@@ -35,14 +35,14 @@ public class Serializer
         root = new Element("serialized");
         doc.setRootElement(root);
       }
+
       Class<?> c = object.getClass();
       Integer id = getID(object);
 
       Element objectElement = new Element("object");
       objectElement.setAttribute(new Attribute("class", c.getName()));
       objectElement.setAttribute(new Attribute("id", id.toString()));
-      //doc.getRootElement().addContent(objectElement);
-      //objectElement.setAttribute()
+
 /*
       if(c.isArray())
       {
@@ -62,11 +62,11 @@ public class Serializer
               if(id != -1)
               {
                 ref.setText();
-                objectElement.addContent();
+                objectElement.addContent(ref);
               }
               for(int j = 0; j < Array.getLength(array); j++)
               {
-                  serialize(Array.get(array, j));
+                  objectElement.addContent(serialize(Array.get(array, j)).getRootElement());
               }
             }
           }
@@ -82,7 +82,7 @@ public class Serializer
               objectElement.addContent(element);
               tempClass = tempClass.getSuperclass();
           }
-  //    }
+    //  }
 
       if(currentElement == 0)
       {
@@ -126,7 +126,7 @@ public class Serializer
             Element reference = new Element("reference");
             element.addContent(reference);
             reference.setText(id.toString());
-            serialize(field);
+            element.addContent(serialize(field).getRootElement());
         }
         elements.add(element);
       }

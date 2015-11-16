@@ -13,41 +13,6 @@ public class ObjectCreator
       user_input = new Scanner(System.in);
     }
 
-  //classes to represent the different Objects
-  public class SimpleObject{
-
-    private int a;
-    private int b;
-
-    public SimpleObject(int a, int b){
-        this.a = a;
-        this.b = b;
-    }
-  }
-
-  public class ObjectReferenceObjects{
-
-    private Object objA;
-    private Object objB;
-
-    public ObjectReferenceObjects(Object objA, Object objB){
-      this.objA = objA;
-      this.objB = objB;
-    }
-  }
-
-  public class ObjectPrimitivesArray{
-
-    private int[] intArray;
-    private final int LENGTH = 5;
-
-    public ObjectPrimitivesArray(){
-      intArray = new int[LENGTH];
-    }
-
-  }
-
-
   public Object createObject()
   {
     //get user Input for selection
