@@ -138,23 +138,26 @@ public class Inspector{
 
   //Methods for finding out an objects fields recursivley
   public void findFields(Object obj, Class objClass, Vector fieldsToInspect){
-    //Field[] objClass.getDeclaredFields();
+
     if(objClass.getDeclaredFields().length >= 1){
+      Field[] fldArray = objClass.getDeclaredFields();
+      for (int i = 0; i < fldArray.length; i++){
 
-      Field fld = objClass.getDeclaredFields()[0];
+        Field fld = fldArray[i];//objClass.getDeclaredFields()[0];
 
-    	fld.setAccessible(true);
+      	fld.setAccessible(true);
 
-    	if(!fld.getType().isPrimitive())
-    		    fieldsToInspect.addElement(fld);
+      	if(!fld.getType().isPrimitive())
+      		    fieldsToInspect.addElement(fld);
 
-    	try{
-    		System.out.println("Field: " + fld.getName()
-        + "\n\t Type: " + fld.getType()
-        + "\n\t Modifiers: " + Modifier.toString(fld.getModifiers())
-        + "\n\t Value: " + fld.get(obj));
-    	}catch(Exception e) {}
-    }
+      	try{
+      		System.out.println("Field: " + fld.getName()
+          + "\n\t Type: " + fld.getType()
+          + "\n\t Modifiers: " + Modifier.toString(fld.getModifiers())
+          + "\n\t Value: " + fld.get(obj));
+      	}catch(Exception e) {}
+      }
+  }
 
     if(objClass.getSuperclass() != null)
     	findFields(obj, objClass.getSuperclass() , fieldsToInspect);
