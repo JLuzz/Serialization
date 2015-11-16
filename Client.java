@@ -54,7 +54,7 @@ public class Client {
         Boolean havingFun = true;
         Client client = new Client();
         while(havingFun){
-          System.out.println("Wanna serialize an object cool guy?(y/n)");
+          //System.out.println("Wanna serialize an object cool guy?(y/n)");
           //replace with finding user input
           String userIn = "y";
           if(userIn.equals("y")){

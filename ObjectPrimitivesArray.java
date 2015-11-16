@@ -1,4 +1,3 @@
-
 public class ObjectPrimitivesArray{
 
     protected int[] intArray;
