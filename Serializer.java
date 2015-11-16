@@ -1,151 +1,98 @@
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 import org.jdom2.*;
 
 public class Serializer
 {
-  private Document doc = null;
-  private Element root;
-
-  private Integer referenceId = 0;
-  private HashMap<Object, Integer> referenceMap = new HashMap<Object, Integer>();
-
-  private int currentElement = 0;
-  private ArrayList<Object> serializedObjects = new ArrayList<Object>();
 
   public Serializer()
   {
 
   }
 
-  public Document serialize(Object object)
+  public Document serialize(Object object) throws Exception
   {
-    if(!serializedObjects.contains(object))
-    {
-
-      serializedObjects.add(object);
-
-      if(currentElement++ == 0){
-        doc = new Document();
-        root = new Element("serialized");
-        doc.setRootElement(root);
-      }
-
-      Class<?> c = object.getClass();
-      Integer id = getID(object);
-
-      Element objectElement = new Element("object");
-      objectElement.setAttribute(new Attribute("class", c.getName()));
-      objectElement.setAttribute(new Attribute("id", id.toString()));
-
-/*
-      if(c.isArray())
-      {
-          Object array = object;
-          objectElement.setAttribute(new Attribute("length", Integer.toString(Array.getLength(array))));
-
-          if(c.getComponent(object.isPrimitive()))
-          {
-            Element value;
-          }
-          else
-          {
-            for(int j = 0; j < Array.getLength(array); j++)
-            {
-              Element ref = new Element("reference");
-              id = getID(Array.get(array, j));
-              if(id != -1)
-              {
-                ref.setText();
-                objectElement.addContent(ref);
-              }
-              for(int j = 0; j < Array.getLength(array); j++)
-              {
-                  objectElement.addContent(serialize(Array.get(array, j)).getRootElement());
-              }
-            }
-          }
-      }
-      else
-      {*/
-          Class<?> tempClass = c;
-          while(tempClass != null)
-          {
-            Field[] fields = tempClass.getDeclaredFields();
-            ArrayList<Element> fieldXML = serializedFields(fields, object);
-            for (Element element : fieldXML)
-              objectElement.addContent(element);
-              tempClass = tempClass.getSuperclass();
-          }
-    //  }
-
-      if(currentElement == 0)
-      {
-        serializedObjects.clear();
-        referenceId = 0;
-      }
-      doc.getRootElement().addContent(objectElement);
-    }
-    return doc;
+    return serializeHelper(object, new Document(new Element("serialized")), new IdentityHashMap());
   }
 
-  private ArrayList<Element> serializedFields(Field[] fields, Object object)
+  public Document serializeHelper(Object object, Document target, Map referenceMap) throws Exception
   {
-    ArrayList<Element> elements = new ArrayList<Element>();
+    //put object into table with unique id
+    String id = Integer.toString(referenceMap.size());
+    referenceMap.put(object, id);
+    Class<?> c = object.getClass();
 
-    for(int i = 0; i < fields.length; i++)
+    //create Element for object
+    Element objectElement = new Element("object");
+    objectElement.setAttribute(new Attribute("class", c.getName()));
+    objectElement.setAttribute(new Attribute("id", id));
+    target.getRootElement().addContent(objectElement);
+
+    if(!c.isArray())
     {
-      if(Modifier.isTransient(fields[i].getModifiers()) || Modifier.isFinal(fields[i].getModifiers()) || Modifier.isStatic(fields[i].getModifiers()))
-        continue;
-
-      try
+      Field[] fields = c.getDeclaredFields();
+      for (int i = 0; i < fields.length; i++)
       {
-        Field field = fields[i];
+        if(Modifier.isTransient(fields[i].getModifiers()) || Modifier.isFinal(fields[i].getModifiers()) || Modifier.isStatic(fields[i].getModifiers()))
+          continue;
+        if (!fields[i].isAccessible())
+          fields[i].setAccessible(true);
+        Element fieldElement = new Element("field");
+        fieldElement.setAttribute(new Attribute("name", fields[i].getName()));
+        fieldElement.setAttribute(new Attribute("declaringClass", fields[i].getDeclaringClass().getName()));
 
-        if(!field.isAccessible())
-          field.setAccessible(true);
+        Class fieldType = fields[i].getType();
+        Object child = fields[i].get(object);
 
-        Element element = new Element("field");
-        element.setAttribute(new Attribute("name", field.getName()));
-        element.setAttribute(new Attribute("declaringClass", field.getClass().getName()));
+        fieldElement.addContent(serializeField(fieldType, child, target, referenceMap));
 
-        if(field.getType().isPrimitive())
-        {
-          Element value = new Element("value");
-          value.setText(field.get(object).toString());
-          element.addContent(value);
-        }
-        else
-        {
-            Integer id = getID(field.get(object));
-            Element reference = new Element("reference");
-            element.addContent(reference);
-            reference.setText(id.toString());
-            element.addContent(serialize(field).getRootElement());
-        }
-        elements.add(element);
+        objectElement.addContent(fieldElement);
       }
-      catch(Exception e){}
     }
-    return elements;
+    else
+    {
+      Class componentType = c.getComponentType();
+
+      int length = Array.getLength(object);
+      objectElement.setAttribute(new Attribute("length", Integer.toString(length)));
+
+      for(int i = 0; i < length; i++){
+        objectElement.addContent(serializeField(componentType, Array.get(object, i), target, referenceMap));
+      }
+    }
+    return target;
   }
 
-  private int getID(Object object)
+  private Element serializeField(Class fieldType, Object child, Document target, Map referenceMap) throws Exception
   {
-      Integer id = referenceId;
+    if(child == null){
+      return new Element("null");
+    }
+    else if (!fieldType.isPrimitive())
+    {
+      Element reference = new Element("reference");
 
-      if(referenceMap.containsKey(object))
-        id = referenceMap.get(object);
+      if(referenceMap.containsKey(child))
+      {
+        reference.setText(referenceMap.get(child).toString());
+      }
       else
       {
-        referenceMap.put(object, id);
-        referenceId++;
+        reference.setText(Integer.toString(referenceMap.size()));
+        serializeHelper(child, target, referenceMap);
       }
-      return id;
+      return reference;
+    }
+    else
+    {
+      Element value = new Element("value");
+      value.setText(child.toString());
+      return value;
+    }
   }
 }

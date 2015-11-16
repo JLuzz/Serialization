@@ -1,10 +1,11 @@
 public class ObjectReferenceObjects{
 
-    private Object objA;
-    private Object objB;
+    private SimpleObject objA;
+    private SimpleObject objB;
 
-    public ObjectReferenceObjects(Object objA, Object objB){
+    public ObjectReferenceObjects(SimpleObject objA, SimpleObject objB){
       this.objA = objA;
       this.objB = objB;
     }
+
   }

@@ -14,6 +14,7 @@ public class TestSerializer{
 	private static Serializer serially;
   private static ObjectCreator objCreate;
   private Document expectedDoc;
+	private Document actualDoc;
   private Element root;
 
 	@BeforeClass
@@ -25,6 +26,7 @@ public class TestSerializer{
 	public void setUp(){
 		serially = new Serializer();
     expectedDoc = new Document();
+		actualDoc = null;
     root = new Element("serialized");
     expectedDoc.setRootElement(root);
 	}
@@ -38,6 +40,7 @@ public class TestSerializer{
 	public void tearDown(){
 		serially = null;
     expectedDoc = null;
+		actualDoc = null;
     root = null;
 	}
 
@@ -45,8 +48,9 @@ public class TestSerializer{
 	public void testSerializeSimpleObject(){
     //serialize the test object
     SimpleObject sObject = new SimpleObject(2, 3);
-    Document actualDoc = serially.serialize(sObject);
-
+		try{
+    	actualDoc = serially.serialize(sObject);
+		}catch(Exception e){}
 		//create a document of expexted values to compare against
     Element objectElement = new Element("object");
     objectElement.setAttribute(new Attribute("class", "SimpleObject"));
@@ -69,6 +73,7 @@ public class TestSerializer{
     objectElement.addContent(elementB);
 
     expectedDoc.getRootElement().addContent(objectElement);
+		//System.out.println(new XMLOutputter(Format.getPrettyFormat()).outputString(actualDoc));
 
     assertEquals(expectedDoc.toString(), actualDoc.toString());
 	}
@@ -79,8 +84,9 @@ public class TestSerializer{
     SimpleObject objA = new SimpleObject(1,2);
     SimpleObject objB = new SimpleObject(3,4);
     ObjectReferenceObjects OROObject = new ObjectReferenceObjects(objA, objB);
-    Document actualDoc = serially.serialize(OROObject);
-
+		try{
+	  	actualDoc = serially.serialize(OROObject);
+		}catch(Exception e){}
     //left off here print XML DOC
 		System.out.println(new XMLOutputter(Format.getPrettyFormat()).outputString(actualDoc));
 
