@@ -138,9 +138,10 @@ public class Inspector{
 
   //Methods for finding out an objects fields recursivley
   public void findFields(Object obj, Class objClass, Vector fieldsToInspect){
-
+    //Field[] objClass.getDeclaredFields();
     if(objClass.getDeclaredFields().length >= 1){
-    	Field fld = objClass.getDeclaredFields()[0];
+
+      Field fld = objClass.getDeclaredFields()[0];
 
     	fld.setAccessible(true);
 

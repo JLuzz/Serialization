@@ -1,3 +1,4 @@
+
 public class ObjectPrimitivesArray{
 
     protected int[] intArray;
@@ -6,5 +7,4 @@ public class ObjectPrimitivesArray{
     public ObjectPrimitivesArray(){
       intArray = new int[LENGTH];
     }
-
   }

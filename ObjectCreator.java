@@ -22,7 +22,7 @@ public class ObjectCreator
     System.out.println("(2) ObjectReferenceObjects");
     System.out.println("(3) ObjectPrimitivesArray");
     System.out.println("(4) ObjectReferencesArray");
-    System.out.println("(5) ObjectsCollectionObject");
+    System.out.println("(5) ObjectCollectionObjects");
 
     int selection = Integer.parseInt(user_input.next());
 
@@ -31,7 +31,6 @@ public class ObjectCreator
     switch(selection)
     {
       case 0:
-      //  sender.connected = false;
         break;
       case 1:
         object = createSimpleObject();
@@ -43,10 +42,10 @@ public class ObjectCreator
         object = createObjectPrimitivesArray();
         break;
       case 4:
-        //object = createObjectReferencesArray();
+        object = createObjectReferencesArray();
         break;
       case 5:
-        //object = createObjectsCollectionObject();
+        object = createObjectCollectionObjects();
         break;
     }
     return object;
@@ -87,13 +86,21 @@ public class ObjectCreator
 
     return objPrimsArray;
   }
-/*
-  private ObjectReferencesArray createObjectReferencesArray(){
 
+  private ObjectReferencesArray createObjectReferencesArray(){
+    System.out.println("---Creating ObjectReferencesArray---");
+    //no need to intialize when we can just return one at at the end
+    System.out.println("---Finished creating ObjectReferencesArray---");
+
+    return new ObjectReferencesArray();
   }
 
-  private ObjectsCollectionObject createObjectsCollectionObject()
+  private ObjectCollectionObjects createObjectCollectionObjects()
   {
-    //Vector<>
-  }*/
+    System.out.println("---Creating ObjectCollectionObjects---");
+    //no need to intialize when we can just return one at at the end
+    System.out.println("---Finished creating ObjectCollectionObjects---");
+
+    return new ObjectCollectionObjects();
+  }
 }
