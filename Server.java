@@ -12,6 +12,7 @@ public class Server {
     private Socket socket = null;
     private ObjectInputStream inStream = null;
     private Deserializer deserializer = null;
+    private Inspector visualizer = null;
 
     public Server() {
 
@@ -27,9 +28,16 @@ public class Server {
             String inputString = (String) inStream.readObject();
             SAXBuilder sb = new SAXBuilder();
             Document XMLDoc = sb.build(new StringReader(inputString));
+
             System.out.println("---Recevied XML Document---");
             System.out.println(new XMLOutputter(Format.getPrettyFormat()).outputString(XMLDoc));
             System.out.println("---Derserializing XML Document---");
+
+            deserializer = new Deserializer();
+            Object deseriallyObj = (Object) deserializer.deserialize(XMLDoc);
+
+            visualizer = new Inspector();
+            visualizer.inspect(deseriallyObj, true);
 
             socket.close();
 
@@ -41,6 +49,8 @@ public class Server {
             cn.printStackTrace();
         }catch(JDOMException je){
             je.printStackTrace();
+        }catch(Exception ex){
+          ex.printStackTrace();
         }
     }
 
