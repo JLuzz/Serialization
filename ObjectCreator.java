@@ -66,8 +66,8 @@ public class ObjectCreator
 
   private ObjectReferenceObjects createObjectReferenceObjects(){
     System.out.println("---Creating Object Reference Objects---");
-    Object objA = createSimpleObject();
-    Object objB = createSimpleObject();
+    SimpleObject objA = createSimpleObject();
+    SimpleObject objB = createSimpleObject();
     System.out.println("---Finished Object Reference Objects---");
 
     return new ObjectReferenceObjects(objA, objB);

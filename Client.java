@@ -5,7 +5,9 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import org.jdom2.*;
- 
+import org.jdom2.input.*;
+import org.jdom2.output.*;
+
 public class Client {
     private Socket socket = null;
     private ObjectInputStream inputStream = null;
@@ -13,13 +15,13 @@ public class Client {
     private boolean isConnected = false;
     private Serializer serializer = null;
     private ObjectCreator objCreate = null;
- 
-    public Client() {
- 
+    private Document XMLDoc = null;
+
+    public Client(){
     }
- 
+
     public void communicate() {
- 
+
         while (!isConnected) {
             try {
                 socket = new Socket("localHost", 4321);
@@ -31,27 +33,29 @@ public class Client {
                 serializer = new Serializer();
                 objCreate = new ObjectCreator();
                 Object serialObject = objCreate.createObject();
-                Document XMLDoc = serializer.serialize(serialObject);
+                try{
+                  XMLDoc = serializer.serialize(serialObject);
+                }catch(Exception e){}
 
-                System.out.println(new XMLOutputter(Format.getPrettyFormat().outputString(XMLDoc)));
+                System.out.println(new XMLOutputter(Format.getPrettyFormat()).outputString(XMLDoc));
 
-                outputStream.writeObject(new XMLOutputter(Format.getPrettyFormat().outputString(XMLDoc)));
- 
- 
-            } catch (SocketException se) {
+                outputStream.writeObject(new XMLOutputter(Format.getPrettyFormat()).outputString(XMLDoc));
+
+            }catch(SocketException se){
                 se.printStackTrace();
                 System.exit(0);
-            } catch (IOException e) {
+            }catch(IOException e){
                 e.printStackTrace();
             }
         }
     }
- 
+
     public static void main(String[] args){
         Boolean havingFun = true;
         Client client = new Client();
         while(havingFun){
           System.out.println("Wanna serialize an object cool guy?(y/n)");
+          //replace with finding user input
           String userIn = "y";
           if(userIn.equals("y")){
             client.communicate();

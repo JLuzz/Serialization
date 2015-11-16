@@ -31,7 +31,7 @@ public class TestObjectCreator{
 
 	@Test
 	public void testCreateSimpleObject(){
-		ObjectCreator.SimpleObject sObject = objCreate.new SimpleObject(2, 3);
+		SimpleObject sObject = new SimpleObject(2, 3);
 		assertNotNull(sObject);
 	}
 

@@ -75,7 +75,7 @@ public class Deserializer
       }
       else
       {
-        Class compType = instance.getComponentType();
+        Class compType = instance.getClass().getComponentType();
         for(int j = 0; j < fieldElts.size(); j++)
         {
           Array.set(instance, j, deserializeValue((Element) fieldElts.get(j), compType, table));
@@ -92,7 +92,7 @@ public class Deserializer
     {
       return null;
     }
-    else if(valueType.equal("reference"))
+    else if(valueType.equals("reference"))
     {
       return table.get(valueElement.getText());
     }
@@ -135,7 +135,7 @@ public class Deserializer
       }
       else if(fieldType.equals(char.class))
       {
-        return Char.valueOf(valueElement.getText());
+        return new Character(valueElement.getText().charAt(0));
       }
       else
       {
